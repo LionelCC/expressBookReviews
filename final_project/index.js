@@ -12,9 +12,14 @@ app.use("/customer",session({secret:"fingerprint_customer",resave: true, saveUni
 
 app.use("/customer/auth/*", function auth(req,res,next){
 //Write the authenication mechanism here
+    if (req.session && req.session.accessToken) {
+        next();
+    } else {
+        res.status(401).send("Unauthroized: Access Token missing")
+    }
 });
  
-const PORT =5000;
+const PORT = process.env.PORT || 3000;
 
 app.use("/customer", customer_routes);
 app.use("/", genl_routes);
